@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Projekt2"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid Background="#FF015F6B">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"></ColumnDefinition>
             <ColumnDefinition Width="8*"></ColumnDefinition>
@@ -14,7 +14,11 @@
 
         <Button x:Name="LoadButton" Grid.Column="0" Margin="20,100" Click="LoadButton_Click">Load</Button>
 
-        <Image x:Name="MyImage" Grid.Column="1"></Image>
+        <Image x:Name="MyImage" Grid.Column="1" Width="3" Height="2" MouseLeftButtonDown="ZoomInButtonClick" MouseRightButtonDown="ZoomOutButtonClick" RenderOptions.BitmapScalingMode="NearestNeighbor">
+            <Image.RenderTransform>
+                <ScaleTransform/>
+            </Image.RenderTransform>
+        </Image>
 
     </Grid>
 </Window>
