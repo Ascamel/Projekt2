@@ -31,6 +31,14 @@ namespace Projekt2
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    /// 
+
+    public class MyPixel
+    {
+        public int R, G, B;
+
+    }
+
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -38,7 +46,7 @@ namespace Projekt2
             InitializeComponent();
         }
 
-
+       
 
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
@@ -52,16 +60,18 @@ namespace Projekt2
             int WidthSize = 0, HeightSize = 0, ColourSize = 0;
             int i = 0, j = 0;
 
+            int R = -2, G = -2, B = -2;
+
            // PixelFormat pf = PixelFormats.Bgr24;
 
             BitmapImage bitmapImage = new();
-            bitmapImage.DecodePixelWidth = 3;
-            bitmapImage.DecodePixelHeight=2;
+            bitmapImage.DecodePixelWidth = 300;
+            bitmapImage.DecodePixelHeight=200;
            // bitmapImage.pixe
 
 
-            Bitmap bitmap = new(3, 2);
-            bitmap.SetResolution(3, 2);
+            Bitmap bitmap = new(300, 200);
+            bitmap.SetResolution(300, 200);
 
             int rawStride;// = (width * pf.BitsPerPixel + 7) / 8;
            // byte[] rawImage = new byte[rawStride * height];
@@ -76,6 +86,8 @@ namespace Projekt2
             if (result is not true) return;
             string fileName = dialog.FileName;
 
+            int CurrentX=0,CurrentY=0;
+
             FileStream fs = File.Open(fileName, FileMode.Open, FileAccess.Read);
 
             using (StreamReader reader = new(fs, Encoding.ASCII))
@@ -84,81 +96,155 @@ namespace Projekt2
                 {
                     line = reader.ReadLine();
 
-                    if (!line.Contains('#'))
+                    if (!line.Contains('#') && !String.IsNullOrWhiteSpace(line))
                     {
-                        if(line != "")
+                        if (line.Contains("P3"))
                         {
-                            if (line.Contains("P3"))
+                            Type = "P3";
+                        }
+                        else
+                        if (WidthSize == 0)
+                        {
+                            if (line.Contains(' '))
                             {
-                                Type = "P3";
-                            }
-                            else if (WidthSize == 0)
-                            {
-                                string[] splited = line.Replace("  ", "").Split(' ');
-                                if (splited.Count()>1)
-                                {
-                                    WidthSize = Convert.ToInt32(splited[0]);
-                                    HeightSize = Convert.ToInt32(splited[1]);
-                                }
-                                else
-                                {
-                                    WidthSize = Convert.ToInt32(splited[0]);
-                                }
-
-
-                                // bitmapImage.DecodePixelHeight = HeightSize;
-                                //  bitmapImage.DecodePixelWidth = WidthSize;
-
-                            }
-                            else if (HeightSize == 0)
-                            {
-                                string[] splited = line.Replace("  ", "").Split(' ');
-
-
-                                HeightSize = Convert.ToInt32(splited[0]);
-
-
-                            }
-                            else if (ColourSize == 0)
-                            {
-                                ColourSize = Convert.ToInt32(line);
-
+                                string[] splited = line.Split(' ');
+                                WidthSize = Convert.ToInt32(splited[0]);
+                                HeightSize = Convert.ToInt32(splited[1]);
                             }
                             else
                             {
-                                string[] splited = line.Replace("  ", "").Split(' ');
-                                tmp1 = 0;
-
-                                if (splited.Count()>3)
-                                {
-                                    for (int z = 0; z < splited.Count()/3; z++)
-                                    {
-                                        if (z == 0)
-                                        {
-                                            bitmap.SetPixel(z, tmp2, Color.FromArgb(255, Convert.ToInt32(splited[0]), Convert.ToInt32(splited[1]), Convert.ToInt32(splited[2])));
-                                        }
-                                        else if (z==1)
-                                        {
-                                            bitmap.SetPixel(z, tmp2, Color.FromArgb(255, Convert.ToInt32(splited[3]), Convert.ToInt32(splited[4]), Convert.ToInt32(splited[5])));
-                                        }
-                                        else if (z==2)
-                                        {
-                                            bitmap.SetPixel(z, tmp2, Color.FromArgb(255, Convert.ToInt32(splited[6]), Convert.ToInt32(splited[7]), Convert.ToInt32(splited[8])));
-                                        }
-                                        // bitmap.SetPixel(z, tmp2, Color.FromArgb(255, Convert.ToInt32(splited[z]), Convert.ToInt32(splited[z]), Convert.ToInt32(splited[z])));
-                                        tmp1++;
-                                    }
-                                }
-                                else
-                                {
-                                    bitmap.SetPixel(tmp1, tmp2, Color.FromArgb(255, Convert.ToInt32(splited[0]), Convert.ToInt32(splited[1]), Convert.ToInt32(splited[2])));
-                                }
-
-                                tmp2++;
+                                WidthSize = Convert.ToInt32(line);
                             }
                         }
-                        
+                        else
+                        if (HeightSize == 0)
+                        {
+                            HeightSize = Convert.ToInt32(line);
+                        }
+                        else
+                        if (ColourSize == 0)
+                        {
+                            ColourSize = Convert.ToInt32(line);
+                        }
+                        else
+                        {
+                            string[] splited = line.Split(' ');
+
+                            splited = splited.Where(val => val != "").ToArray();
+
+                            if (splited.Count() == 1)
+                            {
+                                if (R < 0)
+                                {
+                                    R = Convert.ToInt32(splited[0]);
+                                }
+                                else
+                                if (R >= 0 && G < 0)
+                                {
+                                    G = Convert.ToInt32(splited[0]);
+                                }
+                                else
+                                if (R >= 0 && G >= 0 && B < 0)
+                                {
+                                    B = Convert.ToInt32(splited[0]);
+                                }
+                                else
+                                if (R >= 0 && G >= 0 && B >= 0)
+                                {
+                                    if(CurrentX<WidthSize)
+                                    {
+                                        bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(255, R, G, B));
+                                        CurrentX++;
+                                    }
+                                    else
+                                    {
+                                        CurrentX = 0;
+                                        CurrentY++;
+                                    }
+                                    
+                                   R = G = B = -2;
+                                }
+                            }
+                        }
                     }
+                    
+
+
+                   /*if (!line.Contains('#'))
+                   {
+                       if(line != "")
+                       {
+                           if (line.Contains("P3"))
+                           {
+                               Type = "P3";
+                           }
+                           else if (WidthSize == 0)
+                           {
+                               string[] splited = line.Replace("  ", "").Split(' ');
+                               if (splited.Count()>1)
+                               {
+                                   WidthSize = Convert.ToInt32(splited[0]);
+                                   HeightSize = Convert.ToInt32(splited[1]);
+                               }
+                               else
+                               {
+                                   WidthSize = Convert.ToInt32(splited[0]);
+                               }
+
+
+                               // bitmapImage.DecodePixelHeight = HeightSize;
+                               //  bitmapImage.DecodePixelWidth = WidthSize;
+
+                           }
+                           else if (HeightSize == 0)
+                           {
+                               string[] splited = line.Replace("  ", "").Split(' ');
+
+
+                               HeightSize = Convert.ToInt32(splited[0]);
+
+
+                           }
+                           else if (ColourSize == 0)
+                           {
+                               ColourSize = Convert.ToInt32(line);
+
+                           }
+                           else
+                           {
+                               string[] splited = line.Replace("  ", "").Split(' ');
+                               tmp1 = 0;
+
+                               if (splited.Count()>3)
+                               {
+                                   for (int z = 0; z < splited.Count()/3; z++)
+                                   {
+                                       if (z == 0)
+                                       {
+                                           bitmap.SetPixel(z, tmp2, Color.FromArgb(255, Convert.ToInt32(splited[0]), Convert.ToInt32(splited[1]), Convert.ToInt32(splited[2])));
+                                       }
+                                       else if (z==1)
+                                       {
+                                           bitmap.SetPixel(z, tmp2, Color.FromArgb(255, Convert.ToInt32(splited[3]), Convert.ToInt32(splited[4]), Convert.ToInt32(splited[5])));
+                                       }
+                                       else if (z==2)
+                                       {
+                                           bitmap.SetPixel(z, tmp2, Color.FromArgb(255, Convert.ToInt32(splited[6]), Convert.ToInt32(splited[7]), Convert.ToInt32(splited[8])));
+                                       }
+                                       // bitmap.SetPixel(z, tmp2, Color.FromArgb(255, Convert.ToInt32(splited[z]), Convert.ToInt32(splited[z]), Convert.ToInt32(splited[z])));
+                                       tmp1++;
+                                   }
+                               }
+                               else
+                               {
+                                   bitmap.SetPixel(tmp1, tmp2, Color.FromArgb(255, Convert.ToInt32(splited[0]), Convert.ToInt32(splited[1]), Convert.ToInt32(splited[2])));
+                               }
+
+                               tmp2++;
+                           }
+                       }
+
+                   }*/
                 }
             }
             bitmapImage = ToBitmapImage(bitmap);
