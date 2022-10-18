@@ -65,13 +65,13 @@ namespace Projekt2
            // PixelFormat pf = PixelFormats.Bgr24;
 
             BitmapImage bitmapImage = new();
-            bitmapImage.DecodePixelWidth = 300;
-            bitmapImage.DecodePixelHeight=200;
+            bitmapImage.DecodePixelWidth = 3;
+            bitmapImage.DecodePixelHeight=2;
            // bitmapImage.pixe
 
 
-            Bitmap bitmap = new(300, 200);
-            bitmap.SetResolution(300, 200);
+            Bitmap bitmap = new(3, 2);
+            bitmap.SetResolution(3, 2);
 
             int rawStride;// = (width * pf.BitsPerPixel + 7) / 8;
            // byte[] rawImage = new byte[rawStride * height];
@@ -131,6 +131,11 @@ namespace Projekt2
                             string[] splited = line.Split(' ');
 
                             splited = splited.Where(val => val != "").ToArray();
+                            if(splited.Contains("\t"))
+                            {
+                                splited = line.Split("\t");
+                                splited = splited.Where(val => val != "").ToArray();
+                            }
 
                             if (splited.Count() == 1)
                             {
@@ -148,22 +153,68 @@ namespace Projekt2
                                 {
                                     B = Convert.ToInt32(splited[0]);
                                 }
-                                else
+                                
                                 if (R >= 0 && G >= 0 && B >= 0)
                                 {
-                                    if(CurrentX<WidthSize)
+                                    bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(R, G, B));
+
+                                    CurrentX++;
+
+                                    if(CurrentX >= WidthSize)
                                     {
-                                        bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(255, R, G, B));
+                                        CurrentX = 0;
+                                        CurrentY++;
+                                    }
+
+                                    /*if(CurrentX<WidthSize)
+                                    {
+                                        bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(R, G, B));
                                         CurrentX++;
                                     }
                                     else
                                     {
                                         CurrentX = 0;
                                         CurrentY++;
-                                    }
-                                    
-                                   R = G = B = -2;
+                                        bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(R, G, B));
+                                    }*/
+
+                                    R = G = B = -2;
                                 }
+                            }
+                            else
+                            {
+                                if (R < 0)
+                                {
+                                    R = Convert.ToInt32(splited[0]);
+                                }
+                                                               
+                                if (G < 0)
+                                {
+                                    G = Convert.ToInt32(splited[1]);
+                                }
+                                
+                                if (B < 0)
+                                {
+                                    B = Convert.ToInt32(splited[2]);
+                                }
+                                
+                                if (R >= 0 && G >= 0 && B >= 0)
+                                {
+                                    if (CurrentX<WidthSize)
+                                    {
+                                        bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(R, G, B));
+                                        CurrentX++;
+                                    }
+                                    else
+                                    {
+                                        CurrentX = 0;
+                                        CurrentY++;
+                                        bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(R, G, B));
+                                    }
+
+                                    R = G = B = -2;
+                                }
+
                             }
                         }
                     }
