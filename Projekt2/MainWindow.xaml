@@ -14,7 +14,7 @@
 
         <Button x:Name="LoadButton" Grid.Column="0" Margin="20,100" Click="LoadButton_Click">Load</Button>
 
-        <Image x:Name="MyImage" Grid.Column="1" Width="300" Height="200" MouseLeftButtonDown="ZoomInButtonClick" MouseRightButtonDown="ZoomOutButtonClick" RenderOptions.BitmapScalingMode="NearestNeighbor">
+        <Image x:Name="MyImage" Grid.Column="1" MouseLeftButtonDown="ZoomInButtonClick" MouseRightButtonDown="ZoomOutButtonClick" RenderOptions.BitmapScalingMode="NearestNeighbor">
             <Image.RenderTransform>
                 <ScaleTransform/>
             </Image.RenderTransform>

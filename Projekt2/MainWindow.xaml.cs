@@ -139,6 +139,8 @@ namespace Projekt2
                                 splited = splited.Where(val => val != "").ToArray();
                             }
 
+
+
                             if (splited.Count() == 1)
                             {
                                 if (R < 0)
@@ -158,7 +160,16 @@ namespace Projekt2
 
                                 if (R >= 0 && G >= 0 && B >= 0)
                                 {
-                                    bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(R, G, B));
+                                    if(ColourSize == 255)
+                                    {
+                                        bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(R, G, B));
+                                    }
+                                    else if(ColourSize == 65535)
+                                    {
+                                        bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(R>>8, G>>8, B>>8));
+                                    }
+
+
 
                                     CurrentX++;
 
@@ -173,7 +184,7 @@ namespace Projekt2
                             }
                             else
                             {
-                                if(splited.Count() == 3)
+                                if (splited.Count() == 3)
                                 {
                                     if (R < 0)
                                     {
@@ -192,7 +203,14 @@ namespace Projekt2
 
                                     if (R >= 0 && G >= 0 && B >= 0)
                                     {
-                                        bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(R, G, B));
+                                        if (ColourSize == 255)
+                                        {
+                                            bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(R, G, B));
+                                        }
+                                        else if (ColourSize == 65535)
+                                        {
+                                            bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(R>>8, G>>8, B>>8));
+                                        }
 
                                         CurrentX++;
 
@@ -205,34 +223,41 @@ namespace Projekt2
                                         R = G = B = -2;
                                     }
                                 }
-                                else if(splited.Count() > 3)
+                                else if (splited.Count() > 3)
                                 {
-                                    if(splited.Count() % 3 ==0)
+                                    if (splited.Count() % 3 ==0)
                                     {
                                         int pom1 = 0;
-                                        for(int am1 = 0; am1 < splited.Count();am1++)
+                                        for (int am1 = 0; am1 < splited.Count(); am1++)
                                         {
-                                            if(pom1==0)
+                                            if (pom1==0)
                                             {
-                                                R = Convert.ToInt32(splited[am1]);                        
+                                                R = Convert.ToInt32(splited[am1]);
                                             }
-                                            else if(pom1==1)
+                                            else if (pom1==1)
                                             {
                                                 G = Convert.ToInt32(splited[am1]);
                                             }
-                                            else if(pom1==2)
+                                            else if (pom1==2)
                                             {
                                                 B = Convert.ToInt32(splited[am1]);
                                             }
                                             pom1++;
-                                            if(pom1 == 3)
+                                            if (pom1 == 3)
                                             {
                                                 pom1 =0;
                                             }
 
                                             if (R >= 0 && G >= 0 && B >= 0)
                                             {
-                                                bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(R, G, B));
+                                                if (ColourSize == 255)
+                                                {
+                                                    bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(R, G, B));
+                                                }
+                                                else if (ColourSize == 65535)
+                                                {
+                                                    bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(R>>8, G>>8, B>>8));
+                                                }
 
                                                 CurrentX++;
 
@@ -243,52 +268,19 @@ namespace Projekt2
                                                 }
 
                                                 R = G = B = -2;
-                                               
+
                                             }
                                         }
-                                        /*int am1 = 1;
-                                        while(am1 <= splited.Count())
-                                        {
-                                            if (R < 0)
-                                            {
-                                                R = Convert.ToInt32(splited[am1-1]);
-                                                am1++;
-                                            }
-                                            
-                                            if (G < 0)
-                                            {
-                                                G = Convert.ToInt32(splited[am1-1]);
-                                                am1++;
-                                            }
-                                            
-                                            if (B < 0)
-                                            {
-                                                B = Convert.ToInt32(splited[am1-1]);
-                                                am1++;
-                                            }
-                                            
-                                            if (R >= 0 && G >= 0 && B >= 0)
-                                            {
-                                                bitmap.SetPixel(CurrentX, CurrentY, Color.FromArgb(R, G, B));
 
-                                                CurrentX++;
-
-                                                if (CurrentX >= WidthSize)
-                                                {
-                                                    CurrentX = 0;
-                                                    CurrentY++;
-                                                }
-
-                                                R = G = B = -2;
-                                                am1++;
-                                            }
-                                            
-                                        }*/
                                     }
                                 }
-                               
+
 
                             }
+
+
+
+
                         }
                     }
 
